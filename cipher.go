@@ -1,6 +1,11 @@
 package main 
 
-import "fmt"
+import (
+	"bufio"
+	"fmt" 
+	"errors"
+	"os"		
+)
 
 func cipher(phrase string, key int) {
 	for i := 0; i < len(phrase); i++ {
@@ -20,6 +25,31 @@ func decipher(phrase string, key int) {
 		}
 		fmt.Printf("%c", c)
 	}
+}
+
+func loadFile(fname string) ([]string, error) {
+	if fname == "" {
+		return nil, errors.New("Decripted file name cannot be emtpy.")
+	}
+
+	// attempt to load dict file.
+	file, err := os.Open(fname)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	return lines, scanner.Err()
+}
+
+func writeFile(fname, content string) {
+
 }
 
 func main() {
